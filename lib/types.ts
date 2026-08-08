@@ -88,7 +88,7 @@ export interface Agreement {
   endsAt: string;
   milestones: Milestone[];
   role: AgreementRole;
-  chain: "solana-mainnet" | "solana-devnet";
+  chain: "stellar-mainnet" | "stellar-testnet";
   escrowAddress: string;
   featured?: boolean;
   tags: string[];
@@ -213,6 +213,6 @@ export interface WalletSummary {
   released: number;
   pending: number;
   address: string;
-  network: "solana-mainnet";
+  network: "stellar-mainnet";
   reserved: number;
 }

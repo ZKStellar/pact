@@ -91,7 +91,7 @@ export function Footer() {
             © 2026 Pact Labs, Inc. All rights reserved.
           </p>
           <p className="font-mono text-[11px] text-muted-2">
-            settled on Solana · usdc
+            settled on Stellar · usdc
           </p>
         </div>
       </div>

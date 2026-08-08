@@ -518,7 +518,7 @@ function WalletSection({ address }: { address?: string }) {
           <p className="text-[13px] font-medium text-foreground">
             {address ? formatAddress(address, 8) : "Not connected"}
           </p>
-          <p className="text-[12px] text-muted">Solana mainnet</p>
+          <p className="text-[12px] text-muted">Stellar mainnet</p>
         </div>
         <Button variant="secondary" size="sm" onClick={() => toast.success("Wallet connected", { description: "Phantom connected successfully." })}>
           Connect wallet

@@ -153,8 +153,8 @@ export const walletSummary: WalletSummary = {
   released: 281200,
   pending: 4000,
   reserved: 12000,
-  address: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
-  network: "solana-mainnet",
+  address: "GQKG7O5CYIOML4ILEYGLCEL4XQP5CBP4S663WWQBVSRJCZO6SJDYI2IL",
+  network: "stellar-mainnet",
 };
 
 export const notifications: Notification[] = [
@@ -172,7 +172,7 @@ export const notifications: Notification[] = [
     id: "nt_02",
     type: "wallet",
     title: "Withdrawal submitted",
-    description: "Your withdrawal of $4,000.00 is being finalized on Solana mainnet.",
+    description: "Your withdrawal of $4,000.00 is being finalized on Stellar mainnet.",
     at: iso(0, 3),
     read: false,
     actionHref: "/wallet",

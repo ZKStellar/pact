@@ -33,7 +33,7 @@ const pact = new Pact({
   title: "Brand Website Redesign",
   description: "Design system, templates, migration.",
   parties: [
-    { address: "7xKXtg2C…", role: "client" },
+    { address: "GQKG7O5C…", role: "client" },
     { address: "G9vQZ1mR…", role: "provider" },
   ],
   milestones: [

@@ -8,7 +8,7 @@ import {
 const faqs = [
   {
     q: "How does the escrow actually work?",
-    a: "When an agreement is created, the value is locked into a program-derived escrow account on Solana. The Pact program is the only authority that can move those funds, and it only does so through approved transitions: milestone approval, mediation decisions, or refunds. No individual key can touch the escrow.",
+    a: "When an agreement is created, the value is locked into a program-derived escrow account on Stellar. The Pact program is the only authority that can move those funds, and it only does so through approved transitions: milestone approval, mediation decisions, or refunds. No individual key can touch the escrow.",
   },
   {
     q: "What happens if the client and provider disagree?",
@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     q: "Which chain and currency does Pact use?",
-    a: "Pact settles on Solana mainnet in USDC. Solana's fast finality and low fees make it practical to move milestone payments of any size without giving up a meaningful share to network costs.",
+    a: "Pact settles on Stellar mainnet in USDC. Stellar's low fees and fast settlement make it practical to move milestone payments of any size without giving up a meaningful share to network costs.",
   },
   {
     q: "Can I integrate Pact into my own product?",

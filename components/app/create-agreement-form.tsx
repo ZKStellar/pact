@@ -35,9 +35,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const solanaAddress = z
+const stellarAddress = z
   .string()
-  .regex(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/, "Enter a valid Solana address");
+  .regex(/^G[A-Z2-7]{55}$/, "Enter a valid Stellar address");
 
 const milestoneSchema = z.object({
   title: z.string().min(3, "Milestone title is required"),
@@ -50,17 +50,17 @@ const milestoneSchema = z.object({
 const formSchema = z.object({
   title: z.string().min(3, "Give the agreement a title"),
   description: z.string().min(20, "Describe the scope in a few sentences"),
-  chain: z.enum(["solana-mainnet", "solana-devnet"]),
+  chain: z.enum(["stellar-mainnet", "stellar-testnet"]),
   tags: z.array(z.string()).max(5, "Up to 5 tags"),
   client: z.object({
     name: z.string().min(1, "Client name required"),
     email: z.string().email("Enter a valid email"),
-    wallet: solanaAddress,
+    wallet: stellarAddress,
   }),
   provider: z.object({
     name: z.string().min(1, "Provider name required"),
     email: z.string().email("Enter a valid email"),
-    wallet: solanaAddress,
+    wallet: stellarAddress,
   }),
   totalAmount: z.coerce.number().min(1, "Set a total amount"),
   milestones: z.array(milestoneSchema).min(1, "Add at least one milestone"),
@@ -107,7 +107,7 @@ const evidenceTypeLabels: Record<string, string> = {
 const defaultValues: FormValues = {
   title: "",
   description: "",
-  chain: "solana-mainnet",
+  chain: "stellar-mainnet",
   tags: [],
   client: { name: "", email: "", wallet: "" },
   provider: { name: "", email: "", wallet: "" },
@@ -335,7 +335,7 @@ export function CreateAgreementForm() {
               <div className="flex justify-between">
                 <span className="text-muted">Network</span>
                 <span className="text-foreground">
-                  {chain === "solana-mainnet" ? "Mainnet" : "Devnet"}
+                  {chain === "stellar-mainnet" ? "Mainnet" : "Testnet"}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -423,14 +423,14 @@ function BasicsStep({
             <Label>Network</Label>
             <Select
               value={watch("chain")}
-              onValueChange={(v) => setValue("chain", v as "solana-mainnet" | "solana-devnet", { shouldValidate: true })}
+              onValueChange={(v) => setValue("chain", v as "stellar-mainnet" | "stellar-testnet", { shouldValidate: true })}
             >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="solana-mainnet">Solana mainnet</SelectItem>
-                <SelectItem value="solana-devnet">Solana devnet (test)</SelectItem>
+                <SelectItem value="stellar-mainnet">Stellar mainnet</SelectItem>
+                <SelectItem value="stellar-testnet">Stellar testnet</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -488,7 +488,7 @@ function ParticipantsStep({ form }: { form: ReturnType<typeof useForm<FormValues
         {errors[key]?.email && <FieldError message={errors[key]?.email?.message} />}
       </div>
       <div className="space-y-2">
-        <Label htmlFor={`${key}.wallet`}>Solana wallet</Label>
+        <Label htmlFor={`${key}.wallet`}>Stellar address</Label>
         <Input
           id={`${key}.wallet`}
           className="font-mono text-[13px]"
@@ -554,7 +554,7 @@ function FundingStep({
             <Wallet className="h-3.5 w-3.5 text-success" /> How funding works
           </p>
           <ul className="mt-2 list-disc space-y-1 pl-4">
-            <li>The full amount is locked into a Pact escrow vault on {watch("chain") === "solana-mainnet" ? "Solana mainnet" : "devnet"}.</li>
+            <li>The full amount is locked into a Pact escrow vault on {watch("chain") === "stellar-mainnet" ? "Stellar mainnet" : "testnet"}.</li>
             <li>Funds are released only when a milestone is approved, or by mediation decision.</li>
             <li>Unspent balances are returned to the client if the agreement is cancelled.</li>
           </ul>
@@ -776,7 +776,7 @@ function ReviewStep({ form }: { form: ReturnType<typeof useForm<FormValues>> }) 
           <p className="text-[12px] font-medium uppercase tracking-wide text-muted-2">Agreement</p>
           <div className="mt-1">
             {row("Title", v.title)}
-            {row("Network", v.chain === "solana-mainnet" ? "Solana mainnet" : "Devnet")}
+            {row("Network", v.chain === "stellar-mainnet" ? "Stellar mainnet" : "Testnet")}
             {row("Value", formatUsd(v.totalAmount))}
             {v.tags.length > 0 && row("Tags", v.tags.join(", "))}
           </div>
@@ -839,7 +839,7 @@ function SuccessScreen({
         <h2 className="mt-5 text-xl font-semibold text-foreground">Agreement drafted</h2>
         <p className="mt-2 max-w-sm text-[13px] leading-relaxed text-muted">
           <span className="font-mono text-foreground">{code}</span> was created on{" "}
-          {chain === "solana-mainnet" ? "Solana mainnet" : "devnet"} with a total value of{" "}
+          {chain === "stellar-mainnet" ? "Stellar mainnet" : "testnet"} with a total value of{" "}
           <span className="text-foreground">{formatUsd(total)}</span>. Invitations were sent to
           both parties.
         </p>

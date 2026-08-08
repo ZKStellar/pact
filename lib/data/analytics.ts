@@ -72,7 +72,7 @@ export const analytics = {
   topAgreements: [
     { code: "PACT-2026-0117", title: "Mobile App Development", amount: 86000, status: "disputed" },
     { code: "PACT-2026-0086", title: "E-commerce Platform Build", amount: 74000, status: "active" },
-    { code: "PACT-2026-0130", title: "Solana Program Security Review", amount: 68000, status: "active" },
+    { code: "PACT-2026-0130", title: "Stellar Program Security Review", amount: 68000, status: "active" },
     { code: "PACT-2026-0098", title: "DevOps & CI/CD Migration", amount: 62000, status: "active" },
     { code: "PACT-2026-0061", title: "Data Pipeline & Analytics Build", amount: 54000, status: "disputed" },
   ],

@@ -62,7 +62,7 @@ export function AgreementDetails({
     <div className="space-y-6">
       <PageHeader
         title={agreement.title}
-        description={`${agreement.code} · ${agreement.currency} on ${agreement.chain === "solana-mainnet" ? "Solana mainnet" : "Solana devnet"}`}
+        description={`${agreement.code} · ${agreement.currency} on ${agreement.chain === "stellar-mainnet" ? "Stellar mainnet" : "Stellar testnet"}`}
       >
         <AgreementStatusBadge status={agreement.status} />
         <Button variant="secondary" onClick={() => router.push("/wallet")}>
@@ -267,7 +267,7 @@ export function AgreementDetails({
                 <div className="flex items-center justify-between text-[12px]">
                   <span className="text-muted">Escrow address</span>
                   <button
-                    onClick={() => copy(agreement.escrowAddress || "7xKXtg2C…sAsU", "Escrow address copied")}
+                    onClick={() => copy(agreement.escrowAddress || "GQKG7O5C…I2IL", "Escrow address copied")}
                     className="flex items-center gap-1 font-mono text-foreground transition-colors hover:text-muted"
                   >
                     {formatAddress(agreement.escrowAddress || "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU", 6)}

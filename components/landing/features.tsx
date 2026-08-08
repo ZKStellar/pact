@@ -19,7 +19,7 @@ const features: Feature[] = [
     icon: Lock,
     title: "Funds held in program escrow",
     description:
-      "Agreement value is locked in a program-verified escrow on Solana. Neither party can move funds without following the terms you both agreed to.",
+      "Agreement value is locked in a program-verified escrow on Stellar. Neither party can move funds without following the terms you both agreed to.",
   },
   {
     icon: Milestone,

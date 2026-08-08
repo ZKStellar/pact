@@ -77,7 +77,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(9),
     startsAt: iso(62),
     endsAt: iso(6),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Escw3J9dP2qMvTkL8sNx5FbH1zR7wC4yA6uG3eQ0iK9jD",
     tags: ["design", "web"],
     milestones: [
@@ -143,7 +143,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(2),
     startsAt: iso(88),
     endsAt: iso(30),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc9mV2qR4sNpXwB7tLkF1hJ8zC6yA3uG0eD5iK9oQ7nS",
     tags: ["mobile", "react-native"],
     featured: true,
@@ -208,7 +208,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(3),
     startsAt: iso(46),
     endsAt: iso(15),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc2hN7vQ9mR4tKxL1pF6bJ8zC3yA0uG5eD8iW2oK4nS9q",
     tags: ["devops", "infra"],
     milestones: [
@@ -272,7 +272,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(4),
     startsAt: iso(70),
     endsAt: iso(20),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc5dK8tQ1mN3pW6xY9vB2hF7jL0sC4yA6uG9eR3oK5nT8q",
     tags: ["marketing", "retainer"],
     milestones: [
@@ -325,7 +325,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(1),
     startsAt: iso(58),
     endsAt: iso(21),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc8pL3vN7mQ1xW5bT9yF2hJ6zC4sA0uG7eD1iK5oR8nU2q",
     tags: ["data", "analytics"],
     featured: true,
@@ -389,7 +389,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(48),
     startsAt: iso(104),
     endsAt: iso(50),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc4vN9qM2xW7bR5kL1pF8hJ3zC6yA0uG4eD7iK0oQ9nS3t",
     tags: ["payments", "integrations"],
     milestones: [
@@ -444,7 +444,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(2),
     startsAt: iso(5),
     endsAt: iso(40),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc1xW6mQ8pN4tK2vB9yF5hJ0zC7sA3uG8eD2iK6oR1nU5q",
     tags: ["security"],
     milestones: [
@@ -496,7 +496,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(1),
     startsAt: iso(0),
     endsAt: iso(45),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "",
     tags: ["design"],
     milestones: [
@@ -547,7 +547,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(3),
     startsAt: iso(60),
     endsAt: iso(18),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc7bM4tN8qX1wK6vR3pF9hJ2zC5sA7uG0eD3iK8oQ1nU6t",
     tags: ["e-commerce", "nextjs"],
     milestones: [
@@ -610,7 +610,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(60),
     startsAt: iso(144),
     endsAt: iso(62),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc3zP8vK2mN5qW7cT1xF6hJ9sL4yA0uG8eD1iK5oR7nU4q",
     tags: ["content", "seo"],
     milestones: [
@@ -665,7 +665,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(100),
     startsAt: iso(154),
     endsAt: iso(60),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc9nK2vM8qW4xT7bR1pF5hJ0zC6sA3uG9eD2iK7oQ1nU5q",
     tags: ["infra"],
     milestones: [
@@ -715,7 +715,7 @@ export const agreements: Agreement[] = [
     updatedAt: iso(120),
     startsAt: iso(184),
     endsAt: iso(120),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc6cM1vN9qW3xK8bT2pF6hJ0zC4sA7uG5eD8iK2oR5nU1t",
     tags: ["ai", "prototype"],
     milestones: [
@@ -743,7 +743,7 @@ export const agreements: Agreement[] = [
   {
     id: "agr_nu",
     code: "PACT-2026-0130",
-    title: "Solana Program Security Review",
+    title: "Stellar Program Security Review",
     description:
       "Audit of the lending program: instruction-level review, invariant fuzzing, economic attack modeling, and remediation.",
     status: "active",
@@ -756,9 +756,9 @@ export const agreements: Agreement[] = [
     updatedAt: iso(1),
     startsAt: iso(20),
     endsAt: iso(12),
-    chain: "solana-mainnet",
+    chain: "stellar-mainnet",
     escrowAddress: "Esc2pW9vK5mN8qT1xR4sF7hJ3zC6yA0uG8eD1iK9oQ4nU7t",
-    tags: ["security", "solana"],
+    tags: ["security", "stellar"],
     featured: true,
     milestones: [
       {

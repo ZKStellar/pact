@@ -70,7 +70,7 @@ export function Hero() {
               <Scale className="h-4 w-4 text-muted" /> Impartial AI mediation
             </span>
             <span className="flex items-center gap-1.5">
-              <Wallet className="h-4 w-4 text-muted" /> USDC on Solana
+              <Wallet className="h-4 w-4 text-muted" /> USDC on Stellar
             </span>
           </div>
         </motion.div>

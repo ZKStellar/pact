@@ -16,7 +16,7 @@ const layers = [
   {
     icon: Boxes,
     name: "Settlement layer",
-    items: ["Solana mainnet", "USDC (SPL)", "Program-derived escrow", "On-chain records"],
+    items: ["Stellar mainnet", "USDC (Stellar)", "Program-derived escrow", "On-chain records"],
     accent: "text-foreground",
   },
 ];
@@ -36,7 +36,7 @@ export function Architecture() {
             <p className="mt-4 text-base leading-relaxed text-muted">
               The Pact program is the single source of truth for every
               agreement. Funds, milestones, evidence, and decisions live on
-              Solana, which means the outcome is auditable by anyone and
+              Stellar, which means the outcome is auditable by anyone and
               cannot be edited after the fact.
             </p>
             <ul className="mt-8 space-y-4">

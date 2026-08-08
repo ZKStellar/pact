@@ -110,7 +110,7 @@ export function Wallet() {
                 {summaryLoading ? <Skeleton className="h-10 w-48" /> : formatUsd(summary?.available ?? 0)}
               </p>
               <p className="mt-1 text-[12px] text-muted-2">
-                USDC on Solana mainnet · {summary?.reserved ? `${formatUsd(summary.reserved)} reserved` : ""}
+                USDC on Stellar mainnet · {summary?.reserved ? `${formatUsd(summary.reserved)} reserved` : ""}
               </p>
               <div className="mt-6 flex flex-wrap gap-2">
                 <DepositDialog address={summary?.address} />
@@ -249,7 +249,7 @@ export function Wallet() {
             </div>
             <CardContent className="px-5 py-4">
               <div className="flex items-center justify-between text-[13px]">
-                <span className="text-muted">Solana mainnet</span>
+                <span className="text-muted">Stellar mainnet</span>
                 <Badge variant="outline" className="gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-success" /> Operational
                 </Badge>
@@ -461,7 +461,7 @@ function WithdrawDialog({ available }: { available: number }) {
         <DialogHeader>
           <DialogTitle>Withdraw USDC</DialogTitle>
           <DialogDescription>
-            Withdraw from your available balance to any Solana address.
+            Withdraw from your available balance to any Stellar address.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
