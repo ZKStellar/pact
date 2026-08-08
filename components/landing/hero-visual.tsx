@@ -107,7 +107,7 @@ function MediatorPane() {
     {
       icon: <span className="h-2 w-2 rounded-full bg-info" />,
       title: "Acceptance criterion 3.4",
-      detail: "12MB heap limit — not satisfied",
+      detail: "12MB heap limit: not satisfied",
     },
     {
       icon: <span className="h-2 w-2 rounded-full bg-warning" />,
@@ -134,7 +134,7 @@ function MediatorPane() {
         <p className="text-[12px] leading-relaxed text-muted">
           <span className="text-foreground">Finding:</span> the staging run
           passes CI, but the client reproduction shows 2 of 500 records dropped
-          at the documented 12MB heap limit — a direct failure of acceptance
+          at the documented 12MB heap limit, a direct failure of acceptance
           criterion 3.4.
         </p>
       </div>

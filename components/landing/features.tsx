@@ -37,7 +37,7 @@ const features: Feature[] = [
     icon: Scale,
     title: "Impartial AI mediator",
     description:
-      "When a dispute opens, the Pact Mediator begins reviewing immediately — weighing evidence against your criteria and explaining every step.",
+      "When a dispute opens, the Pact Mediator begins reviewing immediately, weighing evidence against your criteria and explaining every step.",
   },
   {
     icon: Braces,
@@ -65,8 +65,8 @@ export function Features() {
             Move past trust and manual admin.
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted">
-            Pact encodes the terms of an agreement — funding, milestones,
-            evidence, and mediation — into a system both parties can verify.
+            Pact encodes the terms of an agreement, funding, milestones,
+            evidence, and mediation, into a system both parties can verify.
           </p>
         </div>
 

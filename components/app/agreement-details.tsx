@@ -496,7 +496,7 @@ function MessagesTab({ agreement }: { agreement: Agreement }) {
     {
       from: agreement.parties.find((p) => p.role === "provider")?.name ?? "Provider",
       at: agreement.updatedAt,
-      text: `Thanks — ${agreement.milestones.filter((m) => m.status === "approved").length} milestones approved so far. Next submission will be uploaded by the end of the week.`,
+      text: `Thanks! ${agreement.milestones.filter((m) => m.status === "approved").length} milestones approved so far. Next submission will be uploaded by the end of the week.`,
     },
     {
       from: "Pact Mediator",

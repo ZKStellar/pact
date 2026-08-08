@@ -240,7 +240,7 @@ function CreateKeyDialog() {
         <DialogHeader>
           <DialogTitle>Create an API key</DialogTitle>
           <DialogDescription>
-            Keys are shown once. Store them in a secret manager — do not commit them to source.
+            Keys are shown once. Store them in a secret manager; do not commit them to source.
           </DialogDescription>
         </DialogHeader>
         {created ? (

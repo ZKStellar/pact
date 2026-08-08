@@ -96,7 +96,7 @@ export function MediationRoom({ mediation }: { mediation: Mediation }) {
         id: `m_${Date.now()}`,
         author: "Pact Mediator",
         partyRole: "mediator",
-        text: "Noted. I'm folding this into the evidence weighting against the acceptance criteria and will update the recommendation — you'll see the reasoning update in the right panel shortly.",
+        text: "Noted. I'm folding this into the evidence weighting against the acceptance criteria and will update the recommendation. You'll see the reasoning update in the right panel shortly.",
         at: new Date().toISOString(),
       },
     ]);
@@ -117,7 +117,7 @@ export function MediationRoom({ mediation }: { mediation: Mediation }) {
       </PageHeader>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[300px_1fr] xl:grid-cols-[280px_1fr_340px]">
-        {/* Left — case context */}
+        {/* Left: case context */}
         <div className="space-y-6 lg:sticky lg:top-20 lg:self-start">
           <Card>
             <CardHeader className="pb-3">
@@ -191,7 +191,7 @@ export function MediationRoom({ mediation }: { mediation: Mediation }) {
           </Card>
         </div>
 
-        {/* Center — conversation */}
+        {/* Center: conversation */}
         <Card>
           <CardContent className="flex h-[calc(100vh-16rem)] flex-col p-0">
             <div className="flex items-center justify-between border-b border-border px-5 py-3">
@@ -249,7 +249,7 @@ export function MediationRoom({ mediation }: { mediation: Mediation }) {
           </CardContent>
         </Card>
 
-        {/* Right — evidence & AI reasoning */}
+        {/* Right: evidence & AI reasoning */}
         <div className="space-y-6 xl:sticky xl:top-20 xl:self-start">
           {mediation.recommendation && !decided && (
             <Card className="border-warning/25">

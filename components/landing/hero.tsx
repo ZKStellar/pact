@@ -41,7 +41,7 @@ export function Hero() {
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
             Pact turns agreements into executable systems. Securely hold funds,
             define milestones, collect verifiable evidence, and resolve disputes
-            with an impartial, always-available AI mediator — from creation to
+            with an impartial, always-available AI mediator, from creation to
             settlement.
           </p>
 

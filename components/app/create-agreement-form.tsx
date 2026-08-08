@@ -347,7 +347,7 @@ export function CreateAgreementForm() {
             </div>
             <div className="rounded-md border border-border bg-surface-2 p-3 text-[12px] leading-relaxed text-muted">
               Funded after both parties accept. Funds are released per approved milestone by the
-              Pact escrow program — no party can move them unilaterally.
+              Pact escrow program; no party can move them unilaterally.
             </div>
           </CardContent>
         </Card>
@@ -555,7 +555,7 @@ function FundingStep({
           </p>
           <ul className="mt-2 list-disc space-y-1 pl-4">
             <li>The full amount is locked into a Pact escrow vault on {watch("chain") === "solana-mainnet" ? "Solana mainnet" : "devnet"}.</li>
-            <li>Funds are released only when a milestone is approved — or by mediation decision.</li>
+            <li>Funds are released only when a milestone is approved, or by mediation decision.</li>
             <li>Unspent balances are returned to the client if the agreement is cancelled.</li>
           </ul>
         </div>

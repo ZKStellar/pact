@@ -333,7 +333,7 @@ export default function AgreementsPage() {
                         </AvatarFallback>
                       </Avatar>
                       <span className="truncate text-[13px] text-muted">
-                        {provider?.name ?? "—"}
+                        {provider?.name ?? "-"}
                       </span>
                     </div>
                   </TableCell>

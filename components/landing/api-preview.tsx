@@ -49,7 +49,7 @@ export function ApiPreview() {
             <p className="mt-4 text-base leading-relaxed text-muted">
               A typed SDK and REST API for every stage of the agreement
               lifecycle. Create agreements, fund escrows, submit evidence, and
-              react to dispute decisions — no smart-contract expertise
+              react to dispute decisions; no smart-contract expertise
               required.
             </p>
             <div className="mt-6 flex items-center gap-3 text-sm">

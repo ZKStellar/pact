@@ -24,7 +24,7 @@ const jetbrainsMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pact — Programmable agreement infrastructure",
+    default: "Pact | Programmable agreement infrastructure",
     template: "%s · Pact",
   },
   description:

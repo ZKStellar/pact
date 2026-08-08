@@ -28,7 +28,7 @@ export const mediations: Mediation[] = [
           "Milestone acceptance criteria 3.4 specifies 'no data loss under background memory pressure (repeatable test: 500 records, 12MB heap limit)'. Your submission included logs from a device with an 8MB heap limit. Can you confirm which heap limit was used, and share the test run that demonstrates 3.4 passing?",
         askedAt: iso(5.5),
         response:
-          "We ran the memory-pressure test on staging with the 12MB limit — the 8MB log was an earlier iteration. Attaching the full staging run in PR #312, including the heap profile and the 500-record sync log. The device-side logs in the app store build reflect production, where we did not hit the threshold.",
+          "We ran the memory-pressure test on staging with the 12MB limit. The 8MB log was an earlier iteration. Attaching the full staging run in PR #312, including the heap profile and the 500-record sync log. The device-side logs in the app store build reflect production, where we did not hit the threshold.",
         respondedAt: iso(5),
         answerer: "provider",
       },
@@ -39,7 +39,7 @@ export const mediations: Mediation[] = [
           "The client-side crash reports show two unique sync-related errors (SYNC-4107, SYNC-4107B) on iOS 17.x. Can you confirm whether these reproduce on the exact staging build from PR #312, or only on the store build?",
         askedAt: iso(5),
         response:
-          "We reproduced SYNC-4107 on the exact staging build from PR #312 at the 12MB heap limit — two records out of 500 were silently dropped. The device in the field was the same build. We filmed the repro and attached it, plus the full device log.",
+          "We reproduced SYNC-4107 on the exact staging build from PR #312 at the 12MB heap limit. Two records out of 500 were silently dropped. The device in the field was the same build. We filmed the repro and attached it, plus the full device log.",
         respondedAt: iso(4.6),
         answerer: "client",
       },
@@ -87,7 +87,7 @@ export const mediations: Mediation[] = [
     aiReasoning: {
       findings: [
         "PR #312 passes the automated CI suite including the instrumented sync integration tests.",
-        "Client reproduction video demonstrates SYNC-4107: 2 of 500 records dropped at the documented 12MB heap limit — a direct failure of acceptance criterion 3.4.",
+        "Client reproduction video demonstrates SYNC-4107: 2 of 500 records dropped at the documented 12MB heap limit, a direct failure of acceptance criterion 3.4.",
         "The provider's staging run uses the same build; the heap profile confirms the limit was not honored during the run that passed.",
         "Conflict resolution logic passes the unit suite but was not exercised against a two-device offline merge under the documented constraint.",
         "Scheduling module is functionally complete and covered by tests; no counter-evidence was submitted.",
@@ -101,18 +101,18 @@ export const mediations: Mediation[] = [
       ],
       references: [
         "Milestone 3 acceptance criteria, §3.4 (memory pressure)",
-        "PR #312 — CI run sha 9f2c41d",
-        "Client evidence evd_beta_6 — device reproduction video",
+        "PR #312: CI run sha 9f2c41d",
+        "Client evidence evd_beta_6: device reproduction video",
         "SYNC-4107 crash logs, build 2.4.1 (612)",
         "Sync engine design doc §5 (offline merge)",
       ],
     },
     submittedEvidence: [
       { id: "evd_beta_5", evidenceId: "evd_beta_5", title: "Staging test run + heap profile", type: "document", submittedBy: "provider", submittedAt: iso(5.5), relevance: 0.9 },
-      { id: "evd_beta_7", evidenceId: "evd_beta_7", title: "PR #312 — sync engine", type: "github_pr", submittedBy: "provider", submittedAt: iso(5.5), relevance: 0.85 },
+      { id: "evd_beta_7", evidenceId: "evd_beta_7", title: "PR #312: sync engine", type: "github_pr", submittedBy: "provider", submittedAt: iso(5.5), relevance: 0.85 },
       { id: "evd_beta_4", evidenceId: "evd_beta_4", title: "Release checklist", type: "document", submittedBy: "provider", submittedAt: iso(5.5), relevance: 0.4 },
       { id: "evd_beta_6", evidenceId: "evd_beta_6", title: "SYNC-4107 reproduction video", type: "video", submittedBy: "client", submittedAt: iso(5), relevance: 0.95 },
-      { id: "evd_beta_8", evidenceId: "evd_beta_8", title: "Device logs — build 2.4.1", type: "document", submittedBy: "client", submittedAt: iso(5), relevance: 0.8 },
+      { id: "evd_beta_8", evidenceId: "evd_beta_8", title: "Device logs: build 2.4.1", type: "document", submittedBy: "client", submittedAt: iso(5), relevance: 0.8 },
     ],
     timeline: [
       { date: iso(6), label: "Dispute opened", detail: "Client disputes milestone 3 delivery." },
@@ -189,7 +189,7 @@ export const mediations: Mediation[] = [
     aiReasoning: {
       findings: [
         "Evidence currently favors the client on the metric-window conflict: the signed acceptance criteria reference the 28-day definition, which supersedes the registry.",
-        "The provider's registry history pre-dates the milestone and may reflect an earlier undocumented decision — awaiting registry commit messages.",
+        "The provider's registry history pre-dates the milestone and may reflect an earlier undocumented decision; awaiting registry commit messages.",
         "The revenue mart question is unresolved; the client has not yet answered.",
       ],
       weightings: [
@@ -198,7 +198,7 @@ export const mediations: Mediation[] = [
         { label: "Documentation trail", score: 60 },
       ],
       references: [
-        "Milestone 2 acceptance criteria — metric definitions",
+        "Milestone 2 acceptance criteria: metric definitions",
         "Schema registry commit history (quanta/dbt-registry)",
         "Client rejection comment thread (PACT-2026-0061 #44)",
       ],
@@ -231,7 +231,7 @@ export const mediations: Mediation[] = [
       action: "release_funds",
       amount: 22000,
       rationale:
-        "The milestone spec, signed by both parties, explicitly defers promo codes to milestone 3. The submitted evidence — a working cart drawer with vaulting, line-item editing, and tested gift-card flow — satisfies every in-scope acceptance criterion. Dispute not supported by the agreement.",
+        "The milestone spec, signed by both parties, explicitly defers promo codes to milestone 3. The submitted evidence, a working cart drawer with vaulting, line-item editing, and tested gift-card flow, satisfies every in-scope acceptance criterion. Dispute not supported by the agreement.",
       decidedAt: iso(18),
     },
     questions: [
@@ -242,7 +242,7 @@ export const mediations: Mediation[] = [
           "Milestone 2 scope line 12 states promo code handling is deferred to milestone 3. Does either party dispute that this was in the signed spec at funding time?",
         askedAt: iso(20),
         response:
-          "No dispute on scope — the concern is that the cart drawer exposes a promo code field that silently does nothing, which we felt was misleading even if out of scope.",
+          "No dispute on scope. The concern is that the cart drawer exposes a promo code field that silently does nothing, which we felt was misleading even if out of scope.",
         respondedAt: iso(19.6),
         answerer: "client",
       },
@@ -280,9 +280,9 @@ export const mediations: Mediation[] = [
         { label: "Counter-evidence strength", score: 12 },
       ],
       references: [
-        "Milestone 2 signed scope — line 12",
-        "Staging storefront — cart drawer QA pass",
-        "Milestone 3 scope — promo code handling",
+        "Milestone 2 signed scope: line 12",
+        "Staging storefront: cart drawer QA pass",
+        "Milestone 3 scope: promo code handling",
       ],
     },
     submittedEvidence: [
@@ -292,7 +292,7 @@ export const mediations: Mediation[] = [
     timeline: [
       { date: iso(21), label: "Dispute opened", detail: "Client disputes PDP & Cart milestone." },
       { date: iso(20), label: "Evidence gathered", detail: "2 items submitted." },
-      { date: iso(18), label: "Decision", detail: "Release funds — $22,000." },
+      { date: iso(18), label: "Decision", detail: "Release funds: $22,000." },
     ],
   },
 ];

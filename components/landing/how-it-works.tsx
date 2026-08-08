@@ -15,7 +15,7 @@ const steps = [
     number: "03",
     title: "Deliver & submit evidence",
     description:
-      "The provider delivers and submits verifiable evidence per milestone — a PR, a file, a live site. Every submission is timestamped.",
+      "The provider delivers and submits verifiable evidence per milestone, like a PR, a file, or a live site. Every submission is timestamped.",
   },
   {
     number: "04",

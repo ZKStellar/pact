@@ -12,7 +12,7 @@ const items: SecurityItem[] = [
     icon: Fingerprint,
     title: "Program-derived escrow",
     description:
-      "Escrow accounts are program-derived and can only be spent through valid agreement transitions — never by a wallet key.",
+      "Escrow accounts are program-derived and can only be spent through valid agreement transitions, never by a wallet key.",
   },
   {
     icon: FileSearch,
@@ -30,7 +30,7 @@ const items: SecurityItem[] = [
     icon: ShieldCheck,
     title: "Non-custodial by default",
     description:
-      "Pact never takes custody. Funds sit in agreement escrows and your own wallet — we just enforce the terms.",
+      "Pact never takes custody. Funds sit in agreement escrows and your own wallet. We just enforce the terms.",
   },
 ];
 

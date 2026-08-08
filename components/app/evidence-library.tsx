@@ -75,18 +75,18 @@ const typeMeta: Record<
 };
 
 const agreementLabels: Record<string, string> = {
-  agr_alpha: "Stellar — Website Redesign",
-  agr_beta: "Quanta — Mobile App v2",
-  agr_gamma: "Orbit — Payment API",
-  agr_delta: "Vertex — Design System",
-  agr_epsilon: "Monarch — Brand Identity",
-  agr_zeta: "Atlas — Internal Tools",
-  agr_theta: "Helios — Landing Page",
-  agr_iota: "Cascade — Mobile Wallet",
-  agr_kappa: "Beacon — Smart Contract",
-  agr_lambda: "Northstar — Dashboard",
-  agr_mu: "Echo — Community Site",
-  agr_nu: "Ironclad — Security Audit",
+  agr_alpha: "Stellar: Website Redesign",
+  agr_beta: "Quanta: Mobile App v2",
+  agr_gamma: "Orbit: Payment API",
+  agr_delta: "Vertex: Design System",
+  agr_epsilon: "Monarch: Brand Identity",
+  agr_zeta: "Atlas: Internal Tools",
+  agr_theta: "Helios: Landing Page",
+  agr_iota: "Cascade: Mobile Wallet",
+  agr_kappa: "Beacon: Smart Contract",
+  agr_lambda: "Northstar: Dashboard",
+  agr_mu: "Echo: Community Site",
+  agr_nu: "Ironclad: Security Audit",
 };
 
 export function EvidenceLibrary() {
@@ -412,7 +412,7 @@ function SubmitEvidenceDialog({
                   Drag & drop a file, or click to browse
                 </p>
                 <p className="mt-1 text-[11px] text-muted-2">
-                  PDF, ZIP, images, video — or paste a public URL below
+                  PDF, ZIP, images, video, or paste a public URL below
                 </p>
               </>
             )}

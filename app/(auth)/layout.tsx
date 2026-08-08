@@ -45,7 +45,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               <div>
                 <p className="text-sm font-semibold">Amara Okafor</p>
                 <p className="text-[13px] text-muted-2">
-                  COO, Fintrail — 214 agreements settled
+                  COO, Fintrail: 214 agreements settled
                 </p>
               </div>
             </footer>

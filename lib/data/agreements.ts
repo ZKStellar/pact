@@ -314,7 +314,7 @@ export const agreements: Agreement[] = [
     code: "PACT-2026-0061",
     title: "Data Pipeline & Analytics Build",
     description:
-      "Real-time data pipeline for product analytics: event ingestion, warehouse modeling with dbt, and a Looker workspace. Evidence for milestone 2 was rejected — provider disputes the review.",
+      "Real-time data pipeline for product analytics: event ingestion, warehouse modeling with dbt, and a Looker workspace. Evidence for milestone 2 was rejected, and the provider disputes the review.",
     status: "disputed",
     role: "client",
     parties: [parties.client, parties.quanta],

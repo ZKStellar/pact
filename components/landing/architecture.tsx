@@ -36,14 +36,14 @@ export function Architecture() {
             <p className="mt-4 text-base leading-relaxed text-muted">
               The Pact program is the single source of truth for every
               agreement. Funds, milestones, evidence, and decisions live on
-              Solana — which means the outcome is auditable by anyone and
+              Solana, which means the outcome is auditable by anyone and
               cannot be edited after the fact.
             </p>
             <ul className="mt-8 space-y-4">
               {[
                 {
                   title: "Escrow is a program, not a wallet",
-                  body: "Funds are controlled by the Pact program's logic — not by any individual. Releasing requires a valid path through the state machine.",
+                  body: "Funds are controlled by the Pact program's logic, not by any individual. Releasing requires a valid path through the state machine.",
                 },
                 {
                   title: "Evidence is anchored on-chain",

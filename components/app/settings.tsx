@@ -376,7 +376,7 @@ function ApiKeysSection() {
       title="API keys"
       description="Keys for the Pact API. Rotate them regularly."
       actionLabel="Create key"
-      onAction={() => toast("Key created", { description: "Copy it now — it won't be shown again." })}
+      onAction={() => toast("Key created", { description: "Copy it now; it won't be shown again." })}
     >
       {keys.map((k) => (
         <div key={k.key} className="flex items-center gap-4 rounded-md border border-border bg-surface-2/50 px-4 py-3">
@@ -397,7 +397,7 @@ function ApiKeysSection() {
         </div>
       ))}
       <div className="rounded-md border border-border bg-surface-2/50 p-3 text-[12px] leading-relaxed text-muted">
-        Store keys in a secret manager. Never commit them to source — Pact scans public repos for
+        Store keys in a secret manager. Never commit them to source. Pact scans public repos for
         exposed keys and auto-revokes them.
       </div>
     </SectionCard>

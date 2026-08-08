@@ -8,7 +8,7 @@ import {
 const faqs = [
   {
     q: "How does the escrow actually work?",
-    a: "When an agreement is created, the value is locked into a program-derived escrow account on Solana. The Pact program is the only authority that can move those funds, and it only does so through approved transitions — milestone approval, mediation decisions, or refunds. No individual key can touch the escrow.",
+    a: "When an agreement is created, the value is locked into a program-derived escrow account on Solana. The Pact program is the only authority that can move those funds, and it only does so through approved transitions: milestone approval, mediation decisions, or refunds. No individual key can touch the escrow.",
   },
   {
     q: "What happens if the client and provider disagree?",
@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     q: "Is the AI mediator actually impartial?",
-    a: "The mediator is bound to the agreement text — the acceptance criteria both parties signed — rather than to either party. Every finding, weighting, and reference is shown in the mediation timeline, and the decision explains exactly which evidence satisfied or failed each criterion. This transparency is what keeps it impartial.",
+    a: "The mediator is bound to the agreement text, the acceptance criteria both parties signed, rather than to either party. Every finding, weighting, and reference is shown in the mediation timeline, and the decision explains exactly which evidence satisfied or failed each criterion. This transparency is what keeps it impartial.",
   },
   {
     q: "What kinds of evidence can be submitted?",
@@ -28,7 +28,7 @@ const faqs = [
   },
   {
     q: "Can I integrate Pact into my own product?",
-    a: "Yes. The REST API and TypeScript SDK expose the full lifecycle — create, fund, evidence, approve, dispute, and settle. Webhooks stream agreement and dispute events to your backend so you can build on top of Pact rather than around it.",
+    a: "Yes. The REST API and TypeScript SDK expose the full lifecycle: create, fund, evidence, approve, dispute, and settle. Webhooks stream agreement and dispute events to your backend so you can build on top of Pact rather than around it.",
   },
 ];
 
