@@ -7,7 +7,7 @@ const pact = new Pact({
   environment: "mainnet",
 });
 
-// Create a milestone agreement with an audited escrow
+// Create a milestone agreement with a program escrow
 const agreement = await pact.agreements.create({
   title: "Brand Website Redesign",
   description: "Design system, templates, and CMS migration.",

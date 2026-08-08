@@ -325,7 +325,7 @@ export default function DashboardPage() {
             <CardContent>
               <div className="flex items-center justify-between text-[13px]">
                 <span className="text-muted">Program audit</span>
-                <span className="text-success">Passed · Aug 2026</span>
+                <span className="text-warning">In progress</span>
               </div>
               <div className="mt-3 flex items-center justify-between text-[13px]">
                 <span className="text-muted">Settlements today</span>

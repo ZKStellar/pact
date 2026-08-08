@@ -22,9 +22,9 @@ const items: SecurityItem[] = [
   },
   {
     icon: Bug,
-    title: "Audited & fuzzed",
+    title: "Audit in progress",
     description:
-      "The Pact program undergoes independent audits and continuous invariant fuzzing before each deployment.",
+      "An independent audit of the Pact program is underway ahead of our mainnet launch, alongside continuous invariant fuzzing.",
   },
   {
     icon: ShieldCheck,
