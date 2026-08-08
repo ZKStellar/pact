@@ -100,6 +100,28 @@ body {
   outline-offset: 2px;
 }
 
+/* Pointer cursor on every interactive element */
+button:not(:disabled),
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+[role="option"],
+[role="switch"],
+[role="radio"],
+[role="checkbox"],
+[role="combobox"],
+[role="link"],
+a,
+select,
+summary,
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+label[for],
+[data-slot="trigger"] {
+  cursor: pointer;
+}
+
 /* Thin utility for grid lines */
 .pact-grid {
   background-image:
