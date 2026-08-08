@@ -72,6 +72,29 @@ export interface Evidence {
 
 export type AgreementRole = "client" | "provider";
 
+export type AmendmentStatus = "pending" | "approved" | "rejected";
+
+export interface AmendmentChange {
+  field: string;
+  from: string;
+  to: string;
+}
+
+export interface AgreementAmendment {
+  id: string;
+  title: string;
+  summary: string;
+  proposedBy: string;
+  proposedAt: string;
+  status: AmendmentStatus;
+  decidedBy?: string;
+  decidedAt?: string;
+  changes: AmendmentChange[];
+  proposedTitle?: string;
+  proposedDescription?: string;
+  milestoneDueDates?: Record<string, string>;
+}
+
 export interface Agreement {
   id: string;
   code: string;
@@ -92,6 +115,7 @@ export interface Agreement {
   escrowAddress: string;
   featured?: boolean;
   tags: string[];
+  amendments?: AgreementAmendment[];
 }
 
 export type MediationStatus = "open" | "in_review" | "decided" | "escalated";

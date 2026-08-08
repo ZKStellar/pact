@@ -211,6 +211,27 @@ export const agreements: Agreement[] = [
     chain: "stellar-mainnet",
     escrowAddress: "Esc2hN7vQ9mR4tKxL1pF6bJ8zC3yA0uG5eD8iW2oK4nS9q",
     tags: ["devops", "infra"],
+    amendments: [
+      {
+        id: "amd_01",
+        title: "Extend Observability & Alerting deadline",
+        summary:
+          "Vertex needs two extra days to wire SLOs into the existing Grafana dashboards and finish pager policy sign-off.",
+        proposedBy: "Vertex Systems",
+        proposedAt: iso(2),
+        status: "pending",
+        changes: [
+          {
+            field: 'Milestone "Observability & Alerting" due date',
+            from: "Jul 27, 2026",
+            to: "Aug 2, 2026",
+          },
+        ],
+        milestoneDueDates: {
+          mil_gamma_3: iso(3),
+        },
+      },
+    ],
     milestones: [
       {
         id: "mil_gamma_1",

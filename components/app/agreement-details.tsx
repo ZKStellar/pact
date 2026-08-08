@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -10,14 +11,32 @@ import {
   CircleDollarSign,
   Scale,
   FileStack,
+  FilePenLine,
   MessageSquare,
   ExternalLink,
   Clock,
   ShieldCheck,
   Flag,
+  Check,
+  X,
+  Pencil,
 } from "lucide-react";
-import type { Agreement, Mediation } from "@/lib/types";
-import { formatUsd, formatDate, formatDateTime, formatAddress, cn, initials } from "@/lib/utils";
+import type {
+  Agreement,
+  Mediation,
+  AgreementAmendment,
+  AmendmentChange,
+} from "@/lib/types";
+import {
+  formatUsd,
+  formatDate,
+  formatDateTime,
+  formatAddress,
+  cn,
+  initials,
+  relativeTime,
+  truncate,
+} from "@/lib/utils";
 import { PageHeader } from "@/components/app/page-header";
 import { AgreementStatusBadge, MilestoneStatusBadge, MediationStatusBadge } from "@/components/app/status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +44,9 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
@@ -44,18 +66,125 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function AgreementDetails({
-  agreement,
+  agreement: initialAgreement,
   mediation,
 }: {
   agreement: Agreement;
   mediation?: Mediation;
 }) {
   const router = useRouter();
+  const [agreement, setAgreement] = useState(initialAgreement);
+  const [amendments, setAmendments] = useState<AgreementAmendment[]>(
+    initialAgreement.amendments ?? []
+  );
+  const [amending, setAmending] = useState(false);
   const fundedPct = Math.round((agreement.fundedAmount / agreement.totalAmount) * 100);
+
+  const currentUser = agreement.parties.find((p) => p.role === agreement.role);
+  const otherParty = agreement.parties.find(
+    (p) => p.role !== agreement.role && p.role !== "escrow"
+  );
 
   const copy = (value: string, label = "Copied") => {
     navigator.clipboard.writeText(value);
     toast.success(label);
+  };
+
+  const proposeAmendment = (draft: {
+    headline: string;
+    summary: string;
+    title: string;
+    description: string;
+    milestoneDueDates: Record<string, string>;
+  }) => {
+    const changes: AmendmentChange[] = [];
+    if (draft.title !== agreement.title) {
+      changes.push({
+        field: "Agreement title",
+        from: agreement.title,
+        to: draft.title,
+      });
+    }
+    if (draft.description !== agreement.description) {
+      changes.push({
+        field: "Description",
+        from: truncate(agreement.description, 90),
+        to: truncate(draft.description, 90),
+      });
+    }
+    agreement.milestones.forEach((m) => {
+      const next = draft.milestoneDueDates[m.id];
+      if (next && next !== m.dueDate) {
+        changes.push({
+          field: `Milestone "${m.title}" due date`,
+          from: formatDate(m.dueDate),
+          to: formatDate(next),
+        });
+      }
+    });
+    if (changes.length === 0) {
+      toast.error("Nothing to amend", {
+        description: "Change a term first, then propose the amendment.",
+      });
+      return false;
+    }
+    const amendment: AgreementAmendment = {
+      id: `amd_${Date.now()}`,
+      title: draft.headline,
+      summary: draft.summary,
+      proposedBy: currentUser?.name ?? "You",
+      proposedAt: new Date().toISOString(),
+      status: "pending",
+      changes,
+      proposedTitle: draft.title !== agreement.title ? draft.title : undefined,
+      proposedDescription:
+        draft.description !== agreement.description ? draft.description : undefined,
+      milestoneDueDates: draft.milestoneDueDates,
+    };
+    setAmendments((prev) => [...prev, amendment]);
+    toast.success("Amendment proposed", {
+      description: `${otherParty?.name ?? "The other party"} has been asked to approve it.`,
+    });
+    return true;
+  };
+
+  const decideAmendment = (id: string, approve: boolean) => {
+    const target = amendments.find((a) => a.id === id);
+    if (!target) return;
+    setAmendments((prev) =>
+      prev.map((a) =>
+        a.id === id
+          ? {
+              ...a,
+              status: approve ? "approved" : "rejected",
+              decidedBy: otherParty?.name ?? "The other party",
+              decidedAt: new Date().toISOString(),
+            }
+          : a
+      )
+    );
+    if (approve) {
+      setAgreement((prev) => {
+        const next = { ...prev };
+        if (target.proposedTitle) next.title = target.proposedTitle;
+        if (target.proposedDescription) next.description = target.proposedDescription;
+        if (target.milestoneDueDates) {
+          next.milestones = prev.milestones.map((m) =>
+            target.milestoneDueDates?.[m.id]
+              ? { ...m, dueDate: target.milestoneDueDates[m.id] }
+              : m
+          );
+        }
+        return next;
+      });
+      toast.success("Amendment approved", {
+        description: "The updated terms are now in effect for both parties.",
+      });
+    } else {
+      toast.warning("Amendment rejected", {
+        description: "The agreement terms remain unchanged.",
+      });
+    }
   };
 
   return (
@@ -65,6 +194,9 @@ export function AgreementDetails({
         description={`${agreement.code} · ${agreement.currency} on ${agreement.chain === "stellar-mainnet" ? "Stellar mainnet" : "Stellar testnet"}`}
       >
         <AgreementStatusBadge status={agreement.status} />
+        <Button variant="secondary" onClick={() => setAmending(true)}>
+          <Pencil /> Edit terms
+        </Button>
         <Button variant="secondary" onClick={() => router.push("/wallet")}>
           <CircleDollarSign /> Fund
         </Button>
@@ -108,6 +240,14 @@ export function AgreementDetails({
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.65fr_1fr]">
         <div className="space-y-6">
+          {amendments.filter((a) => a.status === "pending").length > 0 && (
+            <PendingAmendmentCard
+              amendments={amendments}
+              otherParty={otherParty?.name ?? "The other party"}
+              onDecide={decideAmendment}
+            />
+          )}
+
           <Card>
             <CardContent className="p-0">
               <Tabs defaultValue="milestones" className="p-0">
@@ -117,6 +257,7 @@ export function AgreementDetails({
                     <TabsTrigger value="evidence">Evidence</TabsTrigger>
                     <TabsTrigger value="activity">Activity</TabsTrigger>
                     <TabsTrigger value="messages">Messages</TabsTrigger>
+                    <TabsTrigger value="amendments">Amendments</TabsTrigger>
                   </TabsList>
                 </div>
 
@@ -236,6 +377,10 @@ export function AgreementDetails({
 
                 <TabsContent value="messages" className="m-0 p-6">
                   <MessagesTab agreement={agreement} />
+                </TabsContent>
+
+                <TabsContent value="amendments" className="m-0 p-6">
+                  <AmendmentsTab amendments={amendments} onPropose={() => setAmending(true)} />
                 </TabsContent>
               </Tabs>
             </CardContent>
@@ -415,6 +560,13 @@ export function AgreementDetails({
           )}
         </div>
       </div>
+
+      <ProposeAmendmentDialog
+        agreement={agreement}
+        open={amending}
+        onOpenChange={setAmending}
+        onPropose={proposeAmendment}
+      />
     </div>
   );
 }
@@ -536,5 +688,316 @@ function MessagesTab({ agreement }: { agreement: Agreement }) {
         </div>
       ))}
     </div>
+  );
+}
+
+function PendingAmendmentCard({
+  amendments,
+  otherParty,
+  onDecide,
+}: {
+  amendments: AgreementAmendment[];
+  otherParty: string;
+  onDecide: (id: string, approve: boolean) => void;
+}) {
+  return (
+    <>
+      {amendments
+        .filter((a) => a.status === "pending")
+        .map((a) => (
+          <div
+            key={a.id}
+            className="rounded-lg border border-warning/25 bg-warning/[0.04] p-5"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-warning/15 text-warning">
+                  <FilePenLine className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">{a.title}</p>
+                  <p className="mt-0.5 text-[12px] text-muted">
+                    Proposed by <span className="text-foreground">{a.proposedBy}</span> ·{" "}
+                    {relativeTime(a.proposedAt)}
+                  </p>
+                </div>
+              </div>
+              <Badge variant="outline" className="border-warning/30 text-warning">
+                Pending approval
+              </Badge>
+            </div>
+            <p className="mt-3 text-[13px] leading-relaxed text-muted">{a.summary}</p>
+            <ul className="mt-3 space-y-1.5">
+              {a.changes.map((c, i) => (
+                <li key={i} className="flex flex-wrap items-center gap-1.5 text-[13px]">
+                  <span className="text-muted">{c.field}:</span>
+                  <span className="text-muted-2 line-through decoration-danger/60">
+                    {c.from}
+                  </span>
+                  <ArrowRight className="h-3 w-3 text-muted-2" />
+                  <span className="text-foreground">{c.to}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-[12px] text-muted-2">
+                Requires approval from both parties · awaiting {otherParty}
+              </p>
+              <div className="flex gap-2">
+                <Button variant="secondary" size="sm" onClick={() => onDecide(a.id, false)}>
+                  <X className="h-3.5 w-3.5" /> Reject
+                </Button>
+                <Button variant="success" size="sm" onClick={() => onDecide(a.id, true)}>
+                  <Check className="h-3.5 w-3.5" /> Approve
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+    </>
+  );
+}
+
+function AmendmentsTab({
+  amendments,
+  onPropose,
+}: {
+  amendments: AgreementAmendment[];
+  onPropose: () => void;
+}) {
+  if (amendments.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 py-10 text-center">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface-2">
+          <FilePenLine className="h-4.5 w-4.5 text-muted" />
+        </div>
+        <div>
+          <p className="text-sm font-medium text-foreground">No amendments yet</p>
+          <p className="mt-1 max-w-sm text-[13px] text-muted">
+            Terms can be changed after funding, but only with approval from both parties.
+          </p>
+        </div>
+        <Button variant="secondary" size="sm" onClick={onPropose}>
+          <Pencil className="h-3.5 w-3.5" /> Propose an amendment
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {[...amendments]
+        .sort((a, b) => new Date(b.proposedAt).getTime() - new Date(a.proposedAt).getTime())
+        .map((a) => (
+          <div
+            key={a.id}
+            className="rounded-lg border border-border bg-surface-2 p-4"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium text-foreground">{a.title}</p>
+                <p className="mt-0.5 text-[12px] text-muted-2">
+                  Proposed by {a.proposedBy} · {formatDateTime(a.proposedAt)}
+                </p>
+              </div>
+              <AmendmentStatusPill status={a.status} />
+            </div>
+            <p className="mt-2 text-[13px] leading-relaxed text-muted">{a.summary}</p>
+            <ul className="mt-3 space-y-1.5 border-t border-border pt-3">
+              {a.changes.map((c, i) => (
+                <li key={i} className="flex flex-wrap items-center gap-1.5 text-[13px]">
+                  <span className="text-muted">{c.field}:</span>
+                  <span className="text-muted-2 line-through decoration-danger/60">
+                    {c.from}
+                  </span>
+                  <ArrowRight className="h-3 w-3 text-muted-2" />
+                  <span className="text-foreground">{c.to}</span>
+                </li>
+              ))}
+            </ul>
+            {a.decidedAt && a.decidedBy && (
+              <p className="mt-3 text-[12px] text-muted-2">
+                {a.status === "approved" ? "Approved" : "Rejected"} by {a.decidedBy} ·{" "}
+                {formatDateTime(a.decidedAt)}
+              </p>
+            )}
+          </div>
+        ))}
+    </div>
+  );
+}
+
+function AmendmentStatusPill({ status }: { status: AgreementAmendment["status"] }) {
+  const styles: Record<string, string> = {
+    pending: "bg-warning/10 text-warning",
+    approved: "bg-success/10 text-success",
+    rejected: "bg-danger/10 text-danger",
+  };
+  return (
+    <span
+      className={cn(
+        "rounded px-1.5 py-0.5 text-[11px] font-medium capitalize",
+        styles[status]
+      )}
+    >
+      {status}
+    </span>
+  );
+}
+
+function ProposeAmendmentDialog({
+  agreement,
+  open,
+  onOpenChange,
+  onPropose,
+}: {
+  agreement: Agreement;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onPropose: (draft: {
+    headline: string;
+    summary: string;
+    title: string;
+    description: string;
+    milestoneDueDates: Record<string, string>;
+  }) => boolean;
+}) {
+  const [headline, setHeadline] = useState("");
+  const [summary, setSummary] = useState("");
+  const [title, setTitle] = useState(agreement.title);
+  const [description, setDescription] = useState(agreement.description);
+  const [dueDates, setDueDates] = useState<Record<string, string>>(() =>
+    Object.fromEntries(agreement.milestones.map((m) => [m.id, m.dueDate.slice(0, 10)]))
+  );
+  const [submitting, setSubmitting] = useState(false);
+
+  const reset = () => {
+    setHeadline("");
+    setSummary("");
+    setTitle(agreement.title);
+    setDescription(agreement.description);
+    setDueDates(
+      Object.fromEntries(agreement.milestones.map((m) => [m.id, m.dueDate.slice(0, 10)]))
+    );
+  };
+
+  const submit = async () => {
+    if (!headline.trim() || !summary.trim()) {
+      toast.error("Add a title and a reason", {
+        description: "Both parties need to understand what is changing and why.",
+      });
+      return;
+    }
+    const milestoneDueDates: Record<string, string> = {};
+    agreement.milestones.forEach((m) => {
+      const value = dueDates[m.id];
+      if (value && value !== m.dueDate.slice(0, 10)) {
+        milestoneDueDates[m.id] = new Date(`${value}T12:00:00Z`).toISOString();
+      }
+    });
+    setSubmitting(true);
+    await new Promise((r) => setTimeout(r, 600));
+    const proposed = onPropose({
+      headline: headline.trim(),
+      summary: summary.trim(),
+      title: title.trim(),
+      description: description.trim(),
+      milestoneDueDates,
+    });
+    setSubmitting(false);
+    if (proposed) {
+      onOpenChange(false);
+      reset();
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-xl">
+        <DialogHeader>
+          <DialogTitle>Propose an amendment</DialogTitle>
+          <DialogDescription>
+            Terms are flexible. Changes only take effect once both parties approve.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="max-h-[60vh] space-y-5 overflow-y-auto pr-1">
+          <div className="space-y-2">
+            <Label htmlFor="amd-headline">Amendment title</Label>
+            <Input
+              id="amd-headline"
+              value={headline}
+              onChange={(e) => setHeadline(e.target.value)}
+              placeholder="e.g. Extend Milestone 2 deadline by two weeks"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="amd-summary">Reason for the change</Label>
+            <Textarea
+              id="amd-summary"
+              rows={2}
+              value={summary}
+              onChange={(e) => setSummary(e.target.value)}
+              placeholder="Explain the change so both parties can review it."
+            />
+          </div>
+
+          <div className="space-y-2 border-t border-border pt-4">
+            <p className="text-[12px] font-medium uppercase tracking-wider text-muted-2">
+              Terms
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="amd-title">Agreement title</Label>
+              <Input
+                id="amd-title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="amd-desc">Description</Label>
+              <Textarea
+                id="amd-desc"
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2 border-t border-border pt-4">
+            <p className="text-[12px] font-medium uppercase tracking-wider text-muted-2">
+              Milestone due dates
+            </p>
+            {agreement.milestones.map((m) => (
+              <div
+                key={m.id}
+                className="flex items-center justify-between gap-3 rounded-md border border-border bg-surface-2 px-3 py-2"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-[13px] font-medium text-foreground">{m.title}</p>
+                  <p className="text-[11px] text-muted-2">{formatUsd(m.amount)}</p>
+                </div>
+                <input
+                  type="date"
+                  value={dueDates[m.id] ?? ""}
+                  onChange={(e) =>
+                    setDueDates((prev) => ({ ...prev, [m.id]: e.target.value }))
+                  }
+                  className="rounded-md border border-border bg-surface px-2.5 py-1.5 font-mono text-[12px] text-foreground outline-none focus:border-foreground/50"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button onClick={submit} disabled={submitting}>
+            {submitting ? "Proposing…" : "Propose amendment"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
