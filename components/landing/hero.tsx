@@ -64,7 +64,7 @@ export function Hero() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[13px] text-muted-2">
             <span className="flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-muted" /> Audited on-chain escrow
+              <ShieldCheck className="h-4 w-4 text-muted" /> On-chain escrow
             </span>
             <span className="flex items-center gap-1.5">
               <Scale className="h-4 w-4 text-muted" /> Impartial AI mediation
