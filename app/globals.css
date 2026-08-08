@@ -122,6 +122,13 @@ label[for],
   cursor: pointer;
 }
 
+/* Placeholder for the rich text editor */
+[contenteditable]:empty:not(:focus)::before {
+  content: attr(data-placeholder);
+  color: var(--muted-2);
+  pointer-events: none;
+}
+
 /* Thin utility for grid lines */
 .pact-grid {
   background-image:

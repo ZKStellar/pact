@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { CreateAgreementForm } from "@/components/app/create-agreement-form";
+import { AgreementCreator } from "@/components/app/agreement-creator";
 
 export const metadata: Metadata = {
   title: "New agreement",
@@ -20,7 +20,7 @@ export default function NewAgreementPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <CreateAgreementForm />
+      <AgreementCreator />
     </div>
   );
 }
