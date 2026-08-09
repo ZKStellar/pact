@@ -87,14 +87,33 @@ lib/
 Current status is honest by design:
 
 - **Shipped:** complete frontend with all product flows, running against realistic mock data.
+- **Contracts:** the Pact escrow program is live on Stellar testnet (see below).
 - **Network:** built natively on Stellar with USDC rails. No mainnet funds are held.
 - **Audit:** an independent audit is underway ahead of mainnet launch, alongside continuous invariant fuzzing. No audited or verified claims are made until it completes.
 
+### Deployed contracts
+
+| Contract | Network | Address |
+| --- | --- | --- |
+| `pact_escrow` | Stellar testnet | `CBZFLHSJVZ3CJTBR6YLIVPV6V4GCJKXUNXPNYWZ65XEJ5HIBNDCNNDI5` |
+| PACT test token | Stellar testnet | `CAPOJRZUGNS3LVN7FIYQZ2P2XQQU6E2AUDGNAX3I7F6UM2QZGNKSEQPM` |
+| USDC (Circle testnet) | Stellar testnet | `CA2E53VHFZ6YSWQIEIPBXJQGT6VW3VKWWZO555XKRQXYJ63GEBJJGHY7` |
+
+The escrow contract exposes `create`, `fund`, `release`, `cancel`, and `view` against any Stellar Asset Contract. Live on-chain flow exercised: agreement created, funded into program escrow, partial release to the payee, and balance verified in the contract.
+
+### Contract builds
+
+```bash
+cd contracts/pact-escrow
+cargo test               # contract unit tests
+stellar contract build   # build the optimized wasm
+```
+
 Up next:
 
-1. Soroban escrow contract (agreement lifecycle, milestone release, amendments, mediation rulings)
-2. Wire the frontend from the mock API layer to the live contract on Stellar testnet
-3. TypeScript SDK and REST API
+1. Wire the frontend from the mock API layer to the live contract on Stellar testnet
+2. TypeScript SDK and REST API
+3. Invariant fuzzing and testnet integration test suites
 4. Testnet beta after audit, then mainnet launch
 
 ## Contributing
