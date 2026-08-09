@@ -10,9 +10,10 @@ import {
   CheckCircle2,
   Copy,
   ExternalLink,
+  KeyRound,
   Lock,
   LockKeyhole,
-  QrCode,
+  QrCode as QrCodeIcon,
   Send,
   Timer,
   TrendingUp,
@@ -20,6 +21,8 @@ import {
 import type { TransactionType } from "@/lib/types";
 import { api, queryKeys } from "@/lib/api";
 import { formatUsd, formatDateTime, formatAddress, cn } from "@/lib/utils";
+import { useWallet } from "@/components/wallet/wallet-provider";
+import { QrCode } from "@/components/app/qr-code";
 import { PageHeader } from "@/components/app/page-header";
 import { TransactionStatusBadge } from "@/components/app/status-badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -58,6 +61,7 @@ const typeMeta: Record<
 };
 
 export function Wallet() {
+  const { address: walletAddress, isPasskey, exportPasskeySecret } = useWallet();
   const { data: summary, isLoading: summaryLoading } = useQuery({
     queryKey: queryKeys.walletSummary,
     queryFn: api.wallet.summary,
@@ -68,6 +72,8 @@ export function Wallet() {
   });
 
   const [filter, setFilter] = useState("all");
+
+  const depositAddress = walletAddress ?? summary?.address;
 
   const filtered = useMemo(() => {
     if (!txns) return [];
@@ -113,7 +119,7 @@ export function Wallet() {
                 USDC on Stellar mainnet · {summary?.reserved ? `${formatUsd(summary.reserved)} reserved` : ""}
               </p>
               <div className="mt-6 flex flex-wrap gap-2">
-                <DepositDialog address={summary?.address} />
+                <DepositDialog address={depositAddress} />
                 <WithdrawDialog available={summary?.available ?? 0} />
                 <Button variant="secondary" onClick={() => toast.info("Connecting to escrow program…")}>
                   <Lock className="h-4 w-4" /> Open escrow dashboard
@@ -164,7 +170,7 @@ export function Wallet() {
               </div>
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center px-6 py-14 text-center">
-                <QrCode className="h-6 w-6 text-muted-2" />
+                <QrCodeIcon className="h-6 w-6 text-muted-2" />
                 <p className="mt-3 text-sm font-medium text-foreground">No transactions</p>
                 <p className="mt-1 text-[13px] text-muted">Try a different filter.</p>
               </div>
@@ -212,18 +218,21 @@ export function Wallet() {
         <div className="space-y-6">
           <Card>
             <CardContent className="flex flex-col items-center px-6 py-8">
-              <div className="rounded-xl border border-border bg-surface-2 p-4">
-                <QrPlaceholder />
+              <div className="rounded-xl border border-border bg-white p-4">
+                <QrCode value={depositAddress ?? "G"} size={152} />
               </div>
-              <p className="mt-4 text-[13px] font-medium text-foreground">
-                {summary ? formatAddress(summary.address, 8) : "…"}
+              <p className="mt-4 font-mono text-[13px] text-foreground">
+                {depositAddress ? formatAddress(depositAddress, 8) : "…"}
               </p>
               <p className="mt-1 text-[11px] text-muted-2">
                 Scan to deposit USDC to this address
               </p>
-              <Button variant="secondary" size="sm" className="mt-4" onClick={() => summary && copy(summary.address, "Address copied")}>
+              <Button variant="secondary" size="sm" className="mt-4" onClick={() => depositAddress && copy(depositAddress, "Address copied")}>
                 <Copy className="h-3.5 w-3.5" /> Copy address
               </Button>
+              {isPasskey && (
+                <ExportKeyDialog onExport={exportPasskeySecret} />
+              )}
             </CardContent>
           </Card>
 
@@ -314,35 +323,6 @@ function EscrowRow({
   );
 }
 
-function QrPlaceholder() {
-  const cells = [
-    "1111111001111",
-    "1000001010001",
-    "1011101001101",
-    "1011101111101",
-    "1011101001001",
-    "1000001011101",
-    "1111111010101",
-    "0010100101100",
-    "1101110111010",
-    "1010010110110",
-    "0101101001010",
-    "1111010111010",
-    "1011101010010",
-  ];
-  return (
-    <div className="grid grid-rows-[repeat(13,1fr)] gap-px" aria-hidden>
-      {cells.map((row, i) => (
-        <div key={i} className="grid grid-cols-[repeat(13,1fr)] gap-px">
-          {row.split("").map((c, j) => (
-            <span key={j} className={cn("h-2.5 w-2.5", c === "1" ? "bg-foreground" : "bg-transparent")} />
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function DepositDialog({ address }: { address?: string }) {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
@@ -378,7 +358,9 @@ function DepositDialog({ address }: { address?: string }) {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed border-border bg-surface-2/50 px-6 py-6">
-          <QrPlaceholder />
+          <div className="rounded-lg bg-white p-2.5">
+            <QrCode value={address ?? "G"} size={136} />
+          </div>
           <div className="flex w-full items-center justify-center gap-2">
             <span className="font-mono text-[13px] text-foreground">
               {address ? formatAddress(address, 8) : "…"}
@@ -412,6 +394,77 @@ function DepositDialog({ address }: { address?: string }) {
         <DialogFooter>
           <Button onClick={submit} disabled={pending} className="w-full">
             {pending ? "Awaiting confirmation…" : "Continue"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ExportKeyDialog({
+  onExport,
+}: {
+  onExport: () => Promise<string | null>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [secret, setSecret] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const openDialog = async () => {
+    setOpen(true);
+    setSecret(null);
+    setCopied(false);
+    const value = await onExport();
+    setSecret(value);
+  };
+
+  const copySecret = async () => {
+    if (!secret) return;
+    await navigator.clipboard.writeText(secret);
+    setCopied(true);
+    toast.success("Private key copied");
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <button
+        onClick={openDialog}
+        className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-bold text-foreground underline decoration-border-strong underline-offset-4 transition-colors hover:text-muted"
+      >
+        <KeyRound className="h-3.5 w-3.5" /> Export private key
+      </button>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle>Export private key</DialogTitle>
+          <DialogDescription>
+            Anyone with this key controls this wallet. Keep it secret and
+            never share it.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="rounded-lg border border-border bg-surface-2 p-3">
+          {secret ? (
+            <p className="break-all font-mono text-[12px] leading-relaxed text-foreground">
+              {secret}
+            </p>
+          ) : (
+            <div className="space-y-2 py-1">
+              <Skeleton className="h-3.5 w-full" />
+              <Skeleton className="h-3.5 w-2/3" />
+            </div>
+          )}
+        </div>
+        <DialogFooter>
+          <Button
+            variant="secondary"
+            onClick={() => setOpen(false)}
+            className="w-full sm:w-auto"
+          >
+            Close
+          </Button>
+          <Button onClick={copySecret} disabled={!secret} className="w-full sm:w-auto">
+            {copied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            {copied ? "Copied" : "Copy private key"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -493,7 +546,7 @@ function WithdrawDialog({ available }: { available: number }) {
             <Input
               id="withdraw-address"
               className="font-mono text-[13px]"
-              placeholder="7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
+              placeholder="GQKG7O5CYIOML4ILEYGLCEL4XQP5CBP4S663WWQBVSRJCZO6SJDYI2IL"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
             />

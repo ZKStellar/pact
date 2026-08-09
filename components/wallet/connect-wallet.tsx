@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Copy,
   ExternalLink,
+  Fingerprint,
   LogOut,
   Wallet,
 } from "lucide-react";
@@ -50,8 +51,22 @@ function hasFreighter() {
   return typeof window !== "undefined" && Boolean(window.freighterApi);
 }
 
+function supportsPasskey() {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.PublicKeyCredential !== "undefined"
+  );
+}
+
 export function ConnectWallet() {
-  const { address, connected, connecting, connect, disconnect } = useWallet();
+  const {
+    address,
+    connected,
+    connecting,
+    connect,
+    signInWithPasskey,
+    disconnect,
+  } = useWallet();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -69,6 +84,25 @@ export function ConnectWallet() {
         description: formatAddress(next, 6),
       });
       setOpen(false);
+    }
+  };
+
+  const passkey = async () => {
+    try {
+      const next = await signInWithPasskey();
+      if (next) {
+        toast.success("Signed in with passkey", {
+          description: `Your wallet is ${formatAddress(next, 6)}`,
+        });
+        setOpen(false);
+      }
+    } catch (error) {
+      toast.error("Passkey sign-in failed", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "Check that this browser supports passkeys.",
+      });
     }
   };
 
@@ -125,12 +159,44 @@ export function ConnectWallet() {
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>Connect your wallet</DialogTitle>
+          <DialogTitle>Sign in to Pact</DialogTitle>
           <DialogDescription>
-            Your wallet address is your Pact identity. No email or password.
+            Use a passkey with your fingerprint or face to create your wallet.
+            No email or password.
           </DialogDescription>
         </DialogHeader>
+
         <div className="max-h-[45dvh] space-y-1.5 overflow-y-auto pr-1">
+          <button
+            onClick={passkey}
+            disabled={connecting || !supportsPasskey()}
+            className="flex w-full items-center gap-3 rounded-lg bg-white px-3.5 py-3 text-left transition-all hover:bg-zinc-200 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-md bg-black text-white">
+              <Fingerprint className="h-4.5 w-4.5" />
+            </span>
+            <span className="flex-1">
+              <span className="block text-[13px] font-medium text-black">
+                Sign in with passkey
+              </span>
+              <span className="block text-[11px] text-zinc-500">
+                {connecting
+                  ? "Waiting for your device…"
+                  : supportsPasskey()
+                    ? "Face ID, Touch ID, or platform key"
+                    : "Not supported in this browser"}
+              </span>
+            </span>
+          </button>
+
+          <div className="flex items-center gap-3 py-1">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-[10px] uppercase tracking-wider text-muted-2">
+              or use a test account
+            </span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
           {hasFreighter() && (
             <button
               onClick={() => pick()}
@@ -148,11 +214,7 @@ export function ConnectWallet() {
                   Browser extension detected
                 </span>
               </span>
-              {connecting ? (
-                <span className="text-[11px] text-muted-2">Connecting…</span>
-              ) : (
-                <CheckCircle2 className="h-4 w-4 text-muted-2" />
-              )}
+              <CheckCircle2 className="h-4 w-4 text-muted-2" />
             </button>
           )}
           {MOCK_ACCOUNTS.map((account) => (
@@ -181,8 +243,8 @@ export function ConnectWallet() {
           ))}
         </div>
         <p className="text-[11px] leading-relaxed text-muted-2">
-          Demo mode: install Freighter for a real Stellar wallet, or pick a
-          test account to explore.
+          Your passkey wallet address is derived from your credential, so it
+          only exists on your device.
         </p>
       </DialogContent>
     </Dialog>
