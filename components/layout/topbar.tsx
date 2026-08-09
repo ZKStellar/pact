@@ -8,12 +8,6 @@ import {
   Search,
   Bell,
   Menu,
-  ChevronDown,
-  LogOut,
-  User,
-  Settings,
-  Wallet,
-  CircleHelp,
   Plus,
   Scale,
   FileStack,
@@ -22,17 +16,15 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { api, queryKeys } from "@/lib/api";
-import { currentUser } from "@/lib/data/organization";
 import { cn, relativeTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Sidebar } from "@/components/layout/sidebar";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ConnectWallet } from "@/components/wallet/connect-wallet";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -183,57 +175,7 @@ export function Topbar() {
 
         <Separator orientation="vertical" className="mx-1 hidden h-5 sm:block" />
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 rounded-md p-1 transition-colors hover:bg-surface">
-              <Avatar className="h-7 w-7">
-                <AvatarFallback className="bg-[#8b5cf6]/15 text-[11px] text-[#c4b5fd]">
-                  JR
-                </AvatarFallback>
-              </Avatar>
-              <ChevronDown className="hidden h-3.5 w-3.5 text-muted-2 sm:block" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-60">
-            <DropdownMenuLabel>
-              <p className="text-sm font-medium text-foreground">{currentUser.name}</p>
-              <p className="text-xs font-normal text-muted-2">{currentUser.email}</p>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/settings">
-                <User /> Profile
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/settings/security">
-                <ShieldCheck /> Security
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/wallet">
-                <Wallet /> Wallet
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/settings/api-keys">
-                <Settings /> API keys
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/api-docs">
-                <CircleHelp /> Documentation
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem destructive asChild>
-              <Link href="/login">
-                <LogOut /> Sign out
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ConnectWallet />
       </div>
     </header>
   );

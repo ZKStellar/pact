@@ -26,10 +26,10 @@ function CtaBanner() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
-                href="/signup"
+                href="/dashboard"
                 className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-white px-6 text-[15px] font-medium text-black transition-all hover:bg-zinc-200 active:scale-[0.98] sm:w-auto"
               >
-                Create an agreement
+                Launch app
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link

@@ -54,16 +54,10 @@ export function LandingNavbar() {
 
         <div className="hidden items-center gap-2 md:flex">
           <Link
-            href="/login"
-            className="rounded-md px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-foreground"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
+            href="/dashboard"
             className="inline-flex h-9 items-center gap-1.5 rounded-md bg-white px-4 text-sm font-medium text-black transition-all hover:bg-zinc-200 active:scale-[0.98]"
           >
-            Get started <ArrowRight className="h-4 w-4" />
+            Launch app <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
@@ -90,16 +84,10 @@ export function LandingNavbar() {
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
               <Link
-                href="/login"
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-foreground"
-              >
-                Sign in
-              </Link>
-              <Link
-                href="/signup"
+                href="/dashboard"
                 className="inline-flex h-10 items-center justify-center rounded-md bg-white px-4 text-sm font-medium text-black"
               >
-                Get started
+                Launch app
               </Link>
             </div>
           </nav>
