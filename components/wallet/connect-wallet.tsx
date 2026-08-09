@@ -130,7 +130,7 @@ export function ConnectWallet() {
             Your wallet address is your Pact identity. No email or password.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-1.5">
+        <div className="max-h-[45dvh] space-y-1.5 overflow-y-auto pr-1">
           {hasFreighter() && (
             <button
               onClick={() => pick()}
