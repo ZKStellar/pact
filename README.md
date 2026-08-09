@@ -96,7 +96,7 @@ Current status is honest by design:
 | Contract | Network | Address |
 | --- | --- | --- |
 | `pact_escrow` | Stellar testnet | `CBZFLHSJVZ3CJTBR6YLIVPV6V4GCJKXUNXPNYWZ65XEJ5HIBNDCNNDI5` |
-| PACT test token | Stellar testnet | `CAPOJRZUGNS3LVN7FIYQZ2P2XQQU6E2AUDGNAX3I7F6UM2QZGNKSEQPM` |
+| PACT test token (test-only, used to exercise the contract) | Stellar testnet | `CAPOJRZUGNS3LVN7FIYQZ2P2XQQU6E2AUDGNAX3I7F6UM2QZGNKSEQPM` |
 | USDC (Circle testnet) | Stellar testnet | `CA2E53VHFZ6YSWQIEIPBXJQGT6VW3VKWWZO555XKRQXYJ63GEBJJGHY7` |
 
 The escrow contract exposes `create`, `fund`, `release`, `cancel`, and `view` against any Stellar Asset Contract. Live on-chain flow exercised: agreement created, funded into program escrow, partial release to the payee, and balance verified in the contract.
