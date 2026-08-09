@@ -87,7 +87,7 @@ lib/
 Current status is honest by design:
 
 - **Shipped:** complete frontend with all product flows, running against realistic mock data.
-- **Network:** migrated to Stellar (USDC rails) after an initial Solana design. No mainnet funds are held.
+- **Network:** built natively on Stellar with USDC rails. No mainnet funds are held.
 - **Audit:** an independent audit is underway ahead of mainnet launch, alongside continuous invariant fuzzing. No audited or verified claims are made until it completes.
 
 Up next:
