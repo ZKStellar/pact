@@ -73,7 +73,7 @@ const toEmbed = (raw: string) => {
     return `<div class="pact-video"><iframe src="https://player.vimeo.com/video/${vimeo[1]}" title="Video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
   }
   if (/\.(mp4|webm|mov|ogv)(\?.*)?$/i.test(value)) {
-    return `<video class="pact-video" controls preload="metadata" src="${escapeHtml(value)}"></video>`;
+    return `<video controls preload="metadata" src="${escapeHtml(value)}"></video>`;
   }
   return null;
 };
@@ -91,7 +91,7 @@ export function RichTextEditor({
   const savedRange = useRef<Range | null>(null);
   const [mediaOpen, setMediaOpen] = useState(false);
   const [mediaTab, setMediaTab] = useState<"image" | "video">("image");
-  const [imageMode, setImageMode] = useState<"upload" | "url">("url");
+  const [mediaMode, setMediaMode] = useState<"upload" | "url">("url");
   const [url, setUrl] = useState("");
   const [pendingDataUrl, setPendingDataUrl] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -117,6 +117,7 @@ export function RichTextEditor({
       savedRange.current = null;
     }
     setMediaTab(tab);
+    setMediaMode("url");
     setUrl("");
     setPendingDataUrl(null);
     setFileName(null);
@@ -144,9 +145,12 @@ export function RichTextEditor({
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast.error("That file is not an image", {
-        description: "Choose a PNG, JPG, GIF, or WebP file.",
+    const isVideo = mediaTab === "video";
+    if (!file.type.startsWith(isVideo ? "video/" : "image/")) {
+      toast.error(isVideo ? "That file is not a video" : "That file is not an image", {
+        description: isVideo
+          ? "Choose an MP4, WebM, or OGV file."
+          : "Choose a PNG, JPG, GIF, or WebP file.",
       });
       return;
     }
@@ -165,33 +169,38 @@ export function RichTextEditor({
   };
 
   const confirmInsert = () => {
-    if (mediaTab === "image") {
-      const src = imageMode === "upload" ? pendingDataUrl : url.trim();
+    if (mediaMode === "upload") {
+      const src = pendingDataUrl;
       if (!src) return;
       insertHtml(
-        `<img class="pact-img" src="${escapeHtml(src)}" alt="${escapeHtml(imageMode === "upload" ? fileName ?? "Image" : url.trim())}" />`
+        mediaTab === "image"
+          ? `<img class="pact-img" src="${escapeHtml(src)}" alt="${escapeHtml(fileName ?? "Image")}" />`
+          : `<video controls preload="metadata" src="${escapeHtml(src)}"></video>`
       );
     } else {
-      const embed = toEmbed(url);
-      if (!embed) {
-        toast.error("Unsupported video link", {
-          description: "Paste a YouTube, Vimeo, or direct .mp4/.webm URL.",
-        });
-        return;
+      const value = url.trim();
+      if (!value) return;
+      if (mediaTab === "image") {
+        insertHtml(
+          `<img class="pact-img" src="${escapeHtml(value)}" alt="${escapeHtml(value)}" />`
+        );
+      } else {
+        const embed = toEmbed(value);
+        if (!embed) {
+          toast.error("Unsupported video link", {
+            description: "Paste a YouTube, Vimeo, or direct .mp4/.webm URL.",
+          });
+          return;
+        }
+        insertHtml(embed);
       }
-      insertHtml(embed);
     }
     setUrl("");
     setPendingDataUrl(null);
     setFileName(null);
   };
 
-  const canInsert =
-    mediaTab === "image"
-      ? imageMode === "upload"
-        ? !!pendingDataUrl
-        : url.trim().length > 0
-      : url.trim().length > 0;
+  const canInsert = mediaMode === "upload" ? !!pendingDataUrl : url.trim().length > 0;
 
   const exec = (command: string, value?: string) => {
     ref.current?.focus();
@@ -269,90 +278,92 @@ export function RichTextEditor({
             <DialogDescription>
               {mediaTab === "image"
                 ? "Upload a file from your device or link to an image URL."
-                : "Paste a YouTube, Vimeo, or direct video link."}
+                : "Upload a file from your device or paste a YouTube, Vimeo, or direct link."}
             </DialogDescription>
           </DialogHeader>
 
-          {mediaTab === "image" ? (
-            <>
-              <div className="flex w-full items-center gap-1 rounded-lg border border-border bg-surface-2 p-1">
-                <button
-                  type="button"
-                  onClick={() => setImageMode("url")}
-                  className={cn(
-                    "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors",
-                    imageMode === "url"
-                      ? "bg-surface text-foreground shadow-sm"
-                      : "text-muted-2 hover:text-foreground"
-                  )}
-                >
-                  <Link2 className="h-3.5 w-3.5" /> Link
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setImageMode("upload")}
-                  className={cn(
-                    "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors",
-                    imageMode === "upload"
-                      ? "bg-surface text-foreground shadow-sm"
-                      : "text-muted-2 hover:text-foreground"
-                  )}
-                >
-                  <Upload className="h-3.5 w-3.5" /> Upload
-                </button>
-              </div>
-
-              {imageMode === "url" ? (
-                <div className="space-y-2">
-                  <Label htmlFor="media-url">Image URL</Label>
-                  <Input
-                    id="media-url"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://…/image.png"
-                  />
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <Label>Image file</Label>
-                  <div className="flex items-center gap-3 rounded-lg border border-dashed border-border bg-surface-2 px-4 py-6">
-                    <input
-                      ref={fileInput}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleFile}
-                    />
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      className="shrink-0"
-                      disabled={uploading}
-                      onClick={() => fileInput.current?.click()}
-                    >
-                      <Upload className="h-3.5 w-3.5" />
-                      {uploading ? "Reading…" : "Choose file"}
-                    </Button>
-                    <span className="min-w-0 flex-1 truncate text-[12px] text-muted-2">
-                      {fileName ?? "Embedded directly in the document as a data URL"}
-                    </span>
-                  </div>
-                </div>
+          <div className="flex w-full items-center gap-1 rounded-lg border border-border bg-surface-2 p-1">
+            <button
+              type="button"
+              onClick={() => setMediaMode("url")}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors",
+                mediaMode === "url"
+                  ? "bg-surface text-foreground shadow-sm"
+                  : "text-muted-2 hover:text-foreground"
               )}
-            </>
-          ) : (
+            >
+              <Link2 className="h-3.5 w-3.5" /> Link
+            </button>
+            <button
+              type="button"
+              onClick={() => setMediaMode("upload")}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors",
+                mediaMode === "upload"
+                  ? "bg-surface text-foreground shadow-sm"
+                  : "text-muted-2 hover:text-foreground"
+              )}
+            >
+              <Upload className="h-3.5 w-3.5" /> Upload
+            </button>
+          </div>
+
+          {mediaMode === "url" ? (
             <div className="space-y-2">
-              <Label htmlFor="media-url">Video URL</Label>
+              <Label htmlFor="media-url">
+                {mediaTab === "image" ? "Image URL" : "Video URL"}
+              </Label>
               <Input
                 id="media-url"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://youtube.com/watch?v=…"
+                placeholder={
+                  mediaTab === "image"
+                    ? "https://…/image.png"
+                    : "https://youtube.com/watch?v=…"
+                }
               />
-              <p className="text-[12px] text-muted-2">
-                YouTube, Vimeo, and direct .mp4/.webm links are supported.
-              </p>
+              {mediaTab === "video" && (
+                <p className="text-[12px] text-muted-2">
+                  YouTube, Vimeo, and direct .mp4/.webm links are supported.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label>{mediaTab === "image" ? "Image file" : "Video file"}</Label>
+              <div className="flex items-center gap-3 rounded-lg border border-dashed border-border bg-surface-2 px-4 py-6">
+                <input
+                  ref={fileInput}
+                  type="file"
+                  accept={mediaTab === "image" ? "image/*" : "video/*"}
+                  className="hidden"
+                  onChange={handleFile}
+                />
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  className="shrink-0"
+                  disabled={uploading}
+                  onClick={() => fileInput.current?.click()}
+                >
+                  <Upload className="h-3.5 w-3.5" />
+                  {uploading ? "Reading…" : "Choose file"}
+                </Button>
+                <span className="min-w-0 flex-1 truncate text-[12px] text-muted-2">
+                  {fileName ??
+                    (mediaTab === "image"
+                      ? "PNG, JPG, GIF or WebP"
+                      : "MP4, WebM, or OGV")}
+                </span>
+              </div>
+              {mediaTab === "video" && (
+                <p className="text-[12px] text-muted-2">
+                  The file is embedded directly in the document, so large videos will make it slow.
+                </p>
+              )}
             </div>
           )}
 
