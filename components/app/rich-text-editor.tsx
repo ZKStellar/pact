@@ -327,16 +327,15 @@ export function RichTextEditor({
                       type="button"
                       variant="secondary"
                       size="sm"
+                      className="shrink-0"
                       disabled={uploading}
                       onClick={() => fileInput.current?.click()}
                     >
                       <Upload className="h-3.5 w-3.5" />
-                      {uploading ? "Reading…" : fileName ?? "Choose file"}
+                      {uploading ? "Reading…" : "Choose file"}
                     </Button>
                     <span className="min-w-0 flex-1 truncate text-[12px] text-muted-2">
-                      {fileName
-                        ? "PNG, JPG, GIF or WebP"
-                        : "Embedded directly in the document as a data URL"}
+                      {fileName ?? "Embedded directly in the document as a data URL"}
                     </span>
                   </div>
                 </div>
