@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   Bold,
   Italic,
@@ -46,6 +46,12 @@ export function RichTextEditor({
   placeholder?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || el.innerHTML === value) return;
+    el.innerHTML = value;
+  }, [value]);
 
   const exec = (command: string, value?: string) => {
     ref.current?.focus();
@@ -99,7 +105,6 @@ export function RichTextEditor({
         data-placeholder={placeholder}
         className="min-h-[320px] px-4 py-3 text-[14px] leading-relaxed text-foreground outline-none [&_h1]:mb-3 [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:tracking-tight [&_h2]:mb-2 [&_h2]:text-lg [&_h2]:font-medium [&_p]:mb-3 [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:mb-3 [&_blockquote]:border-l-2 [&_blockquote]:border-border-strong [&_blockquote]:pl-3 [&_blockquote]:text-muted [&_a]:text-info [&_a]:underline [&_strong]:font-semibold [&_em]:italic"
         onInput={() => onChange(ref.current?.innerHTML ?? "")}
-        dangerouslySetInnerHTML={{ __html: value }}
       />
     </div>
   );
